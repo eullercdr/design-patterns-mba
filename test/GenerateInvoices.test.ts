@@ -1,7 +1,9 @@
+import ContractDatabaseRepository from "../src/ContractDatabaseRepository";
 import GenerateInvoices from "../src/GenerateInvoices";
 
 test("Deve gerar as notas fiscais  por regime de caixa", async () => {
-   const generateInvoices = new GenerateInvoices();
+   const contractRepository = new ContractDatabaseRepository();
+   const generateInvoices = new GenerateInvoices(contractRepository);
    const input = {
       month: 1,
       year: 2022,
@@ -13,7 +15,8 @@ test("Deve gerar as notas fiscais  por regime de caixa", async () => {
 });
 
 test("Deve gerar as notas fiscais  por regime de competencia", async () => {
-   const generateInvoices = new GenerateInvoices();
+   const contractRepository = new ContractDatabaseRepository();
+   const generateInvoices = new GenerateInvoices(contractRepository);
    const input = {
       month: 1,
       year: 2022,
@@ -25,7 +28,8 @@ test("Deve gerar as notas fiscais  por regime de competencia", async () => {
 });
 
 test("Deve gerar as notas fiscais  por regime de competencia", async () => {
-   const generateInvoices = new GenerateInvoices();
+   const contractRepository = new ContractDatabaseRepository();
+   const generateInvoices = new GenerateInvoices(contractRepository);
    const input = {
       month: 2,
       year: 2022,
