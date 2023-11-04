@@ -1,0 +1,43 @@
+version: "3"
+
+services:
+  # Node.js Service
+  app:
+    image: node:latest
+    container_name: mba-node-app
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    command: ["tail", "-f", "/dev/null"]
+    depends_on:
+      - postgres
+
+  # PostgreSQL Service
+  postgres:
+    image: postgres:latest
+    container_name: mba-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: mba
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # pgAdmin Service
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: mba-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: eullercdr@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 123456
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+
+volumes: 
+  pgdata:
