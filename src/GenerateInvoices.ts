@@ -1,14 +1,13 @@
 import moment from "moment";
-import pgp from "pg-promise";
+import ContractDatabaseRepository from "./ContractDatabaseRepository";
 export default class GenerateInvoices {
   async execute(input: Input): Promise<Output[]> {
-    const connection = pgp()("postgres://postgres:123456@postgres:5432/mba");
-    const contracts = await connection.query("SELECT * FROM mba.contract");
     const output: Output[] = [];
+    const contractRepository = new ContractDatabaseRepository();
+    const contracts = await contractRepository.list();
     for (const contract of contracts) {
       if (input.type === 'cash') {
-        const payments = await connection.query("SELECT * FROM mba.payment WHERE id_contract = $1", [contract.id_contract]);
-        for (const payment of payments) {
+        for (const payment of contract.payments) {
           if (payment.date.getMonth() + 1 !== input.month || payment.date.getFullYear() !== input.year) {
             continue;
           }
@@ -33,7 +32,7 @@ export default class GenerateInvoices {
         }
       }
     }
-    await connection.$pool.end();
+
     return output;
   }
 }
