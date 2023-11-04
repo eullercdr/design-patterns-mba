@@ -1,5 +1,4 @@
-import moment from "moment";
-import Invoice from "./Invoice";
+import InvoiceGenerationFactory from "./InvoiceGenerationFactory";
 import Payment from "./Payment";
 
 export default class Contract {
@@ -23,29 +22,7 @@ export default class Contract {
   }
 
   generateInvoices(month: number, year: number, type: string) {
-    const invoices: Invoice[] = [];
-    if (type === "cash") {
-      for (const payment of this.getPayments()) {
-        if (
-          payment.date.getMonth() + 1 !== month ||
-          payment.date.getFullYear() !== year
-        ) {
-          continue;
-        }
-        invoices.push(new Invoice(payment.date, payment.amount));
-      }
-    }
-    if (type === "accrual") {
-      let period = 0;
-      while (period <= this.periods) {
-        const date = moment(this.date).add(period++, "month").toDate();
-        if (date.getMonth() + 1 !== month || date.getFullYear() !== year) {
-          continue;
-        }
-        const amount = this.amount / this.periods;
-        invoices.push(new Invoice(date, amount));
-      }
-    }
-    return invoices;
+    const invoiceGenerationStrategy = InvoiceGenerationFactory.create(type);
+    return invoiceGenerationStrategy.generate(this, month, year);
   }
 }
