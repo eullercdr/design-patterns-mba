@@ -1,8 +1,10 @@
 import ContractDatabaseRepository from "../src/ContractDatabaseRepository";
 import GenerateInvoices from "../src/GenerateInvoices";
+import PgPromiseAdapter from "../src/PgPromiseAdapter";
 
 test("Deve gerar as notas fiscais  por regime de caixa", async () => {
-   const contractRepository = new ContractDatabaseRepository();
+   const connection = new PgPromiseAdapter();
+   const contractRepository = new ContractDatabaseRepository(connection);
    const generateInvoices = new GenerateInvoices(contractRepository);
    const input = {
       month: 1,
@@ -15,7 +17,8 @@ test("Deve gerar as notas fiscais  por regime de caixa", async () => {
 });
 
 test("Deve gerar as notas fiscais  por regime de competencia", async () => {
-   const contractRepository = new ContractDatabaseRepository();
+   const connection = new PgPromiseAdapter();
+   const contractRepository = new ContractDatabaseRepository(connection);
    const generateInvoices = new GenerateInvoices(contractRepository);
    const input = {
       month: 1,
@@ -28,7 +31,8 @@ test("Deve gerar as notas fiscais  por regime de competencia", async () => {
 });
 
 test("Deve gerar as notas fiscais  por regime de competencia", async () => {
-   const contractRepository = new ContractDatabaseRepository();
+   const connection = new PgPromiseAdapter();
+   const contractRepository = new ContractDatabaseRepository(connection);
    const generateInvoices = new GenerateInvoices(contractRepository);
    const input = {
       month: 2,

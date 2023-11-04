@@ -1,15 +1,18 @@
-import pgp from "pg-promise";
 import ContractRepository from "./ContractRepository";
+import DatabaseConnection from "./DatabaseConnection";
 
 export default class ContractDatabaseRepository implements ContractRepository {
+
+  constructor(readonly connection: DatabaseConnection) {
+  }
+
   async list(): Promise<any> {
-    const connection = pgp()("postgres://postgres:123456@postgres:5432/mba");
-    const contracts = await connection.query("SELECT * FROM mba.contract");
+    const contracts = await this.connection.query("SELECT * FROM mba.contract", []);
     for (const contract of contracts) {
-      contract.payments = await connection.query("SELECT * FROM mba.payment WHERE id_contract = $1",
+      contract.payments = await this.connection.query("SELECT * FROM mba.payment WHERE id_contract = $1",
         [contract.id_contract]);
     }
-    await connection.$pool.end();
+    await this.connection.close();
     return contracts
   }
 }
