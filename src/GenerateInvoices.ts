@@ -1,7 +1,12 @@
 import moment from "moment";
 import ContractRepository from "./ContractRepository";
+import JsonPresenter from "./JsonPresenter";
+import Presenter from "./Presenter";
 export default class GenerateInvoices {
-  constructor(readonly contractRepository: ContractRepository) {}
+  constructor(
+    readonly contractRepository: ContractRepository,
+    readonly presenter: Presenter = new JsonPresenter()
+  ) {}
 
   async execute(input: Input): Promise<Output[]> {
     const output: Output[] = [];
@@ -19,7 +24,7 @@ export default class GenerateInvoices {
         });
       }
     }
-    return output;
+    return this.presenter.present(output);
   }
 }
 
@@ -29,7 +34,7 @@ type Input = {
   type: string;
 };
 
-type Output = {
+export type Output = {
   date: string;
   amount: number;
 };
